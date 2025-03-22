@@ -1,0 +1,124 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block content %}
+<!-- Include the jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<!-- Book Search Section -->
+<center>
+    <br />
+    <h1 class="display-5 fw-bold">Books You Have Issued</h1><br />
+    <div class="input-group container">
+        <!-- <input
+            id="search"
+            type="search"
+            class="form-control rounded"
+            placeholder="Search Book"
+            aria-label="Search"
+            aria-describedby="search-addon"
+        /> -->
+        <form class="d-flex search-form w-100 mx-3" method="get" action="/searchproductreturn/">
+            <input type="search" name="q" class="form-control search-input mx-2" placeholder="Search for Book, Author">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+    </div>
+</center>
+
+<!-- Table displaying books -->
+<div class="container">
+   
+<!-- Displaying messages (if any) -->
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} rounded-0" role="alert">
+   {{ message }}
+</div>
+{% endfor %}
+<br>
+   <table class="table">
+      <thead class="thead-dark">
+         <tr>
+            <th scope="col">Book Name</th>
+            <th scope="col">Author Name</th>
+            <th scope="col">Issue date</th>
+            <th scope="col" class="text-center">Return Button</th>
+         </tr>
+      </thead>
+      <tbody id="table_data">
+         {% for book in books %}
+         <tr>
+            <td>{{ book.book_name }}</td>
+            <td>{{ book.author_name }}</td>
+            <td>{{ book.issue_date }}</td>
+            <td class="text-center">
+               <form action="{% url 'return_item' %}" aria-controls="rounded" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="book_id" value="{{ book.id }}" />
+                  <button type="submit" class="btn btn-outline-success btn-sm">
+                     Return
+                  </button>
+               </form>
+            </td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+
+<!-- Search Functionality Script -->
+<script>
+    $(document).ready(function () {
+        $("#search").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#table_data tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+
+<!-- Custom Styles -->
+<style>
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-radius: 10px;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 16px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .input-group {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    body {
+        background: linear-gradient(#87f4b5, #93cbf1);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+</style>
+{% endblock %}

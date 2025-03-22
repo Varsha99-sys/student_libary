@@ -1,0 +1,358 @@
+{% extends 'base.html' %} 
+
+{% load static %} 
+
+{% block content %}
+<!-- Custom Styles for the Page -->
+<style>
+    html {
+        height: 100%;
+        /* overflow: hidden; */
+    }
+    body {
+        position: relative;
+        margin: 0;
+        height: 100%;
+        background: linear-gradient(45deg, #b4e2cc, #9de4ec);
+        scroll-behavior: smooth;
+    }
+
+    .shelf {
+        height: 8px;
+        border-radius: 10px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        border-bottom: 10px solid #56251a;
+    }
+    .shelf:hover {
+        animation: shelf-lift 0.5s ease;
+        animation-iteration-count: 1;
+        transform-origin: 50% 50%;
+        cursor: pointer;
+    }
+    .shelf:hover .book {
+        animation: book-bounce 0.5s ease;
+        animation-iteration-count: 1;
+    }
+
+    .book {
+        margin-bottom: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 2px;
+        font-size: 20px;
+        overflow: hidden;
+        line-height: 15%;
+        text-align: center;
+        font-weight: lighter;
+    }
+
+    .book:nth-child(0):before {
+        content: "---";
+        color: #eeeeee;
+    }
+
+    .book:nth-child(0) {
+        height: 57px;
+        animation-delay: 0s !important;
+        background-color: #f6c9b9;
+        width: 9px;
+    }
+
+    /* You can continue with your nth-child rules here as needed */
+
+    @keyframes book-bounce {
+        0% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-20px);
+        }
+        80% {
+            transform: translateY(-2px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes shelf-lift {
+        0% {
+            transform: translateY(0) rotate(0);
+        }
+        20% {
+            transform: translateY(-5px) rotate(2deg);
+        }
+        40% {
+            transform: translateY(-10px) rotate(0);
+        }
+        60% {
+            transform: translateY(-10px) rotate(-2deg);
+        }
+        80% {
+            transform: translateY(-5px) rotate(-1deg);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- Content Area -->
+<div class="container mt-4">
+    <!-- Create a title "Library Management System" -->
+    <div class="row">
+        <div class="col-md-12">
+            <br />
+            <h1 class="text-center">WELCOME TO OUR LIBRARY</h1>
+          
+        </div>
+    </div>
+    <center>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">About us</button>
+          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact us</button>
+        </div>
+      </nav></center>
+        <!-- Book Shelf Representation -->
+    <div class="shelf">
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+        <div class="book"></div>
+    </div>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+            <br />
+
+    <style>
+    
+        .container1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .image-container {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .image-container img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .text-container {
+            flex: 1;
+        }
+
+        .text-container h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .text-container p {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .image-container {
+                padding-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+<div class="container1">
+    <div class="image-container">
+        <img src="{% static 'images/magicbook.jpg' %}" alt="" width="80px" height="240px">
+    </div>
+    <div class="text-container">
+        <p style="text-align: center">Welcome to our library.</p>
+    <p style="text-align: center">We have a wide range of books.</p>
+    <p style="text-align: center">You can borrow books from our library.</p>
+    <p style="text-align: center">You can also return books to our library.</p>
+    <p style="text-align: center">We hope you enjoy your stay.</p>
+    </div>
+</div> 
+
+        </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                <!-- about us start -->
+<style>
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.container-about {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 900px;
+    margin: 50px auto;
+    
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+    flex: 1;
+    padding: 20px;
+}
+
+.about-text h1 {
+    color: #333;
+}
+
+.about-text p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.about-image {
+    flex: 1;
+    text-align: center;
+}
+
+.about-image img {
+    width: 100%;
+    height:80%;
+    max-width: 350px;
+    border-radius: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-about {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-image {
+        margin-top: 20px;
+    }
+}
+
+ </style>
+    <div class="container-about">
+        <div class="about-text">
+            <h1>About Us</h1>
+            <p>Welcome to the Student Library System, a digital platform designed to make reading and learning more accessible for students. Our mission is to provide an easy-to-use, efficient, and resourceful system where students can browse, borrow, and manage books effortlessly.</p>
+
+            <p>Our library system is equipped with advanced search filters, real-time availability updates, and an intuitive interface to help students find what they need without hassle. Whether you're searching for textbooks, research materials, or novels, we've got you covered.</p>
+
+            <p>Join our digital library today and explore a world of knowledge!</p>
+        </div>
+
+        <div class="about-image">
+            <img src="{% static 'images/about.jpg' %}" alt="Library Image">
+        </div>
+    </div>
+        </div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+        <!-- contact us starts -->
+ <style>
+    .container-contact{
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+ </style>
+<div class="container-contact">
+    <div class="row">
+
+        {% if errmsg %}
+   <div class="alert alert-warning alert-dismissible fade show" role="alert">
+     <strong>Error!</strong>{{errmsg}}
+     <button
+       type="button"
+       class="btn-close"
+       data-bs-dismiss="alert"
+       aria-label="Close"
+     ></button>
+   </div>
+   {% endif %}
+
+        <div class="col-md-6 mt-5" style="margin-left: 25%;">
+            <h2>Contact us</h2>
+                <!-- <h3><i class="bi bi-question-circle-fill text-danger"></i></h3> -->
+                <hr>
+                <form method="post" action="/contact_view/">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label for="input1" class="form-label"><strong>Name</strong></label>
+                        <input type="text" class="form-control" name="name" id="input1" pattern="[A-Za-z]+" title="Only letters are allowed"placeholder="Enter your name" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="input3" class="form-label"><strong>Mail id</strong></label>
+                        <input type="email" class="form-control" name="email" id="input3" placeholder="Enter your email_id" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="input4" class="form-label"><strong>Message</strong></label>
+                        <textarea  class="form-control" name="message" id="input4" cols="30" rows="5" required></textarea>
+                    </div>
+                  <center>
+                    <div class="md-5">
+                      <input type="submit" class="btn btn-danger" value="Send" width="50%">
+                    </div></center>            
+                </form>
+        </div><!--Contact form-->
+        {% block extra_js %}
+<script>
+  document.getElementById("name").addEventListener("input", function () {
+    this.value = this.value.replace(/[^A-Za-z]/g, '');
+  });
+</script>
+{% endblock %}
+
+    </div>
+    </div>
+        
+        </div>
+      </div>
+  
+
+    <!-- Library Description -->
+    <!-- <br />
+    <br /> -->
+    
+</div>
+
+{% endblock %}

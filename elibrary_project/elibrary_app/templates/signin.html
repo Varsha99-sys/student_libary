@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<center>
+   <h1 class="display-5"><b>Login To Library</b></h1>
+</center>
+<!-- Container for the login form -->
+<div class="container border border-dark p-3 mt-5" style="max-width: 550px;">
+    <!-- Display error messages if any -->
+   {% for message in messages %}
+   <div class="alert alert-danger" role="alert">
+       {{ message }}
+   </div>
+   {% endfor %}
+   <form action="{% url 'signin' %}" method="POST">
+       {% csrf_token %}
+       
+       <!-- Username Field -->
+       <div class="form-group">
+           <label for="username"><b>Username</b></label>
+           <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
+       </div>
+       <br>
+       
+       <!-- Password Field -->
+       <div class="form-group">
+           <label for="password"><b>Password</b></label>
+           <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+       </div>
+       <br>
+       <!-- Submit Button -->
+       <center>
+           <button type="submit" class="btn btn-primary">Login</button>
+       </center>
+       <br>
+       <!-- forgot password -->
+       <div class="col">
+        <a href="{% url 'request_password_reset' %}">Forgot password?</a>
+        <a href="{% url 'social:begin' 'google-oauth2' %}" style="float: right;">Login with : <i class="bi bi-google"></i></a>
+      </div>
+       <!-- Links to Register and Admin login -->
+       <center>
+           <a href="{% url 'register' %}">Don't have an account? Register here</a>
+       </center>    
+   </form>
+   <br>
+</div>
+
+{% endblock %}
