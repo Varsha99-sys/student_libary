@@ -307,7 +307,7 @@ from django.contrib import messages
 from .models import StudyMaterial
 
 def searchproductstudy(req):
-    query = req.GET.get("q", "")  # Get the query parameter from GET request
+    query = req.GET.get("q")  # Get the query parameter from GET request
     books = StudyMaterial.objects.all()  # Default: show all books if no query
     print(books)
     if query:
@@ -316,7 +316,9 @@ def searchproductstudy(req):
         print(materials,query)
         if not materials.exists():  # If no books match the search, show a message
             messages.error(req, "No results found!") 
-    context = {'materials': materials, 'query': query}
+            
+    context = {'materials': materials}
+
     return render(req, 'study_materials.html', context)
 
 def searchproductreturn(req):
