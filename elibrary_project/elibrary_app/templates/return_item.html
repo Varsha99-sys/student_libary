@@ -43,7 +43,6 @@
          <tr>
             <th scope="col">Book Name</th>
             <th scope="col">Author Name</th>
-            <th scope="col">Issue date</th>
             <th scope="col" class="text-center">Return Button</th>
          </tr>
       </thead>
@@ -52,7 +51,6 @@
          <tr>
             <td>{{ book.book_name }}</td>
             <td>{{ book.author_name }}</td>
-            <td>{{ book.issue_date }}</td>
             <td class="text-center">
                <form action="{% url 'return_item' %}" aria-controls="rounded" method="POST">
                   {% csrf_token %}

@@ -215,7 +215,23 @@ def issue_item(request):
             messages.success(request, "Book issued successfully.")
         else:
             messages.error(request, "This book is no longer available.")
-
+        email = request.POST.get("email")
+        if expected_return_date: 
+            send_mail(
+                subject="Book issued successfully..",
+                message=f"Book issued successfully.. \n Kindly return your book before {expected_return_date} expected date.",
+                from_email={email},  # Change to your email
+                recipient_list=["sangalepearl99@gmail.com"],  # Your email
+                fail_silently=False,
+            )
+        if expected_return_date == datetime.today(): 
+            send_mail(
+                subject="Reminder Mail",
+                message="Please return your book.",
+                from_email={email},  # Change to your email
+                recipient_list=["sangalepearl99@gmail.com"],  # Your email
+                fail_silently=False,
+            )
     # Get books that are not yet issued to the user and have quantity > 0
     my_items = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).values_list("book_id", flat=True)
     books = Book.objects.filter(quantity__gt=0).exclude(id__in=my_items)  # Only show books with quantity > 0
@@ -392,8 +408,6 @@ def contact_view(request):
         if not re.match('^[a-zA-Z\s]*$', name):
                 return render(request, "home.html", context)
 
-            # raise ValidationError('Name should only contain alphabetic characters and spaces.')
-
         if name and email and message: 
             send_mail(
                 subject="New Contact Form Submission",
@@ -432,40 +446,6 @@ SMTP_PORT = 587
 EMAIL_ADDRESS = "your_email@gmail.com"  # Replace with your email
 EMAIL_PASSWORD = "your_password"  # Use an app password for security
 
-def get_due_reminders():
-    """Fetch records where expected_return_date is in 2 days."""
-    conn = sqlite3.connect("database.db")  # Replace with your database
-    cursor = conn.cursor()
-    due_date = (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
-  
-    cursor.execute("SELECT email, expected_return_date FROM users WHERE expected_return_date = ?", (due_date,))
-    reminders = cursor.fetchall()
-    
-    conn.close()
-    return reminders
-
-def send_email(to_email):
-    """Send reminder email with an HTML file link."""
-    subject = "Reminder: Upcoming Return Due Date"
-    html_url = "/https://example.com/reminder.html"  # Replace with actual HTML file URL
-    body = f"""
-    Hello,<br><br><br>
-    T/his is a reminder that your item is due for return in 2 days. Please ensure timely return.<br>
-    <a href='{html_url}'>Click here</a> for more details.<br><br>
-    ank you!
-    """
-    
-    message = f"Subject: {subject}\nContent-Type: text/html\n\n{body}"
-    
-    try:
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        server.starttls()
-        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        server.sendmail(EMAIL_ADDRESS, to_email, message)
-        server.quit()
-        print(f"Reminder sent to {to_email}")
-    except Exception as e:
-        print(f"Failed to send email to {to_email}: {e}")
 
 def main():
     reminders = get_due_reminders()
