@@ -224,11 +224,14 @@ def issue_item(request):
                 recipient_list=["sangalepearl99@gmail.com"],  # Your email
                 fail_silently=False,
             )
-        if expected_return_date == datetime.today(): 
+        from datetime import datetime
+        expected_return_date = datetime.strptime(expected_return_date, "%Y-%m-%d") 
+
+        if expected_return_date.date() == datetime.today().date(): 
             send_mail(
                 subject="Reminder Mail",
-                message="Please return your book.",
-                from_email={email},  # Change to your email
+                message=f"Hello student ,\n Please return your book.\n You exceded the {expected_return_date} you have pay for it.\n Thank you",
+                from_email="info@library.com",  # Change to your email
                 recipient_list=["sangalepearl99@gmail.com"],  # Your email
                 fail_silently=False,
             )
@@ -332,6 +335,8 @@ def searchproductstudy(req):
         print(materials,query)
         if not materials.exists():  # If no books match the search, show a message
             messages.error(req, "No results found!") 
+    else:
+        messages.error(req, "No results found!") 
             
     context = {'materials': materials}
 
