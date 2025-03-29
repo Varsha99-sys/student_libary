@@ -14,8 +14,9 @@
         position: relative;
         margin: 0;
         height: 100%;
-        background: linear-gradient(45deg, #b4e2cc, #9de4ec);
+        background: linear-gradient(45deg, #024b53,#9dc0af);
         scroll-behavior: smooth;
+        color: black;
     }
 
     .shelf {
@@ -100,20 +101,30 @@
     }
 </style>
 
-<!-- Content Area -->
+
+<!-- Title Section -->
 <div class="container mt-4">
-    <!-- Create a title "Library Management System" -->
-    <div class="row">
-        <div class="col-md-12">
-            <br />
-            <h1 class="text-center">WELCOME TO OUR LIBRARY</h1>
-          
+    <div class="col-md-12">
+        <div class="library-title">
+            <span class="word">WELCOME</span>
+            <span class="word">TO</span>
+            <span class="word">OUR</span>
+            <span class="word">LIBRARY</span>
         </div>
     </div>
+</div>
+<!-- 
+<div class="container mt-4">
+        <div class="col-md-12">
+        
+            <h1 class="text-center display-6"><b><i>WELCOME TO OUR LIBRARY</i></b></h1>
+          
+        </div>
+    </div> -->
     <center>
     <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+        <div class="nav nav-tabs nav1" id="nav-tab" role="tablist" >
+          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"  type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
           <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">About us</button>
           <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact us</button>
         </div>
@@ -180,7 +191,7 @@
 
         .text-container p {
             font-size: 18px;
-            color: #666;
+            color: black;
             line-height: 1.6;
         }
 
@@ -201,12 +212,13 @@
     <div class="image-container">
         <img src="{% static 'images/magicbook.jpg' %}" alt="" width="80px" height="240px">
     </div>
-    <div class="text-container">
-        <p style="text-align: center">Welcome to our library.</p>
-    <p style="text-align: center">We have a wide range of books.</p>
-    <p style="text-align: center">You can borrow books from our library.</p>
-    <p style="text-align: center">You can also return books to our library.</p>
-    <p style="text-align: center">We hope you enjoy your stay.</p>
+    <div class="text-container" style="color: black !important;">
+    <p style="text-align: center">Welcome to our library.</p>
+    <p style="text-align: center">We offer a vast collection of books.</p>
+    <p style="text-align: center">Borrow and return books easily with our system.</p>
+    <p style="text-align: center">Enjoy a seamless reading experience with us.</p>
+    <p style="text-align: center">Happy reading!</p>
+
     </div>
 </div> 
 
@@ -243,7 +255,7 @@
 
 .about-text p {
     font-size: 16px;
-    color: #555;
+    color: black;
     line-height: 1.6;
 }
 
@@ -273,7 +285,7 @@
 
  </style>
     <div class="container-about">
-        <div class="about-text">
+        <div class="about-text" style="color: black;">
             <h1>About Us</h1>
             <p>Welcome to the Student Library System, a digital platform designed to make reading and learning more accessible for students. Our mission is to provide an easy-to-use, efficient, and resourceful system where students can browse, borrow, and manage books effortlessly.</p>
 
@@ -283,7 +295,7 @@
         </div>
 
         <div class="about-image">
-            <img src="{% static 'images/about.jpg' %}" alt="Library Image">
+            <img src="{% static 'images/about.jpg' %}" alt="Library Image"  width="80px" height="240px">
         </div>
     </div>
         </div>
@@ -312,9 +324,9 @@
    {% endif %}
 
         <div class="col-md-6 mt-5" style="margin-left: 25%;">
-            <h2>Contact us</h2>
-                <!-- <h3><i class="bi bi-question-circle-fill text-danger"></i></h3> -->
-                <hr>
+             <h2>Contact us</h2>
+               <!-- <h3><i class="bi bi-question-circle-fill text-danger"></i></h3> 
+                <hr> -->
                 <form method="post" action="/contact_view/">
                     {% csrf_token %}
                     <div class="mb-2">
@@ -322,7 +334,7 @@
                         <input type="text" class="form-control" name="name" id="input1" pattern="[A-Za-z]+" title="Only letters are allowed"placeholder="Enter your name" required>
                     </div>
                     <div class="mb-2">
-                        <label for="input3" class="form-label"><strong>Mail id</strong></label>
+                        <label for="input3" class="form-label"><strong>Email</strong></label>
                         <input type="email" class="form-control" name="email" id="input3" placeholder="Enter your email_id" required>
                     </div>
                     <div class="mb-2">
@@ -330,9 +342,10 @@
                         <textarea  class="form-control" name="message" id="input4" cols="30" rows="5" required></textarea>
                     </div>
                   <center>
-                    <div class="md-5">
-                      <input type="submit" class="btn btn-danger" value="Send" width="50%">
-                    </div></center>            
+                      <!-- <input type="submit" class="btn btn-danger btn-lg" value="Send" width="50%"> -->
+                      <button type="submit" class="btn btn-primary btn-lg" style="background: linear-gradient(90deg, #56ccf2, #2f80ed); border: none;">Send</button>
+
+                    </center>            
                 </form>
         </div><!--Contact form-->
         {% block extra_js %}

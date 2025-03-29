@@ -1,7 +1,9 @@
 {% extends 'base.html' %} 
 {% block title %} Library | Return item {% endblock %}
 
-{% load static %} 
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
 
 {% block content %}
 <!-- Include the jQuery library -->
@@ -10,8 +12,20 @@
 
 <!-- Book Search Section -->
 <center>
-    <br />
-    <h1 class="display-5 fw-bold">Books You Have Issued</h1><br />
+    <!-- <br />
+    <h1 class="display-5 fw-bold">Books You Have Issued</h1><br /> -->
+    <!-- Title Section -->
+<div class="container mt-4">
+    <div class="col-md-12">
+        <div class="library-title">
+            <span class="word">Books</span>
+            <span class="word">You</span>
+            <span class="word">Have</span>
+            <span class="word">Issued</span>
+            
+        </div>
+    </div>
+</div>
     <div class="input-group container">
         <!-- <input
             id="search"
@@ -38,17 +52,18 @@
 </div>
 {% endfor %}
 <br>
-   <table class="table">
+   <table class="table" style="border: none;">
       <thead class="thead-dark">
-         <tr>
+        <tr style="background-color: rgb(146, 146, 146);">
             <th scope="col">Book Name</th>
             <th scope="col">Author Name</th>
             <th scope="col" class="text-center">Return Button</th>
          </tr>
       </thead>
+      <tr style="height: 10px;"></tr>
       <tbody id="table_data">
          {% for book in books %}
-         <tr>
+         <tr style="background-color: rgb(212, 209, 209);">
             <td>{{ book.book_name }}</td>
             <td>{{ book.author_name }}</td>
             <td class="text-center">
@@ -66,17 +81,6 @@
    </table>
 </div>
 
-<!-- Search Functionality Script -->
-<script>
-    $(document).ready(function () {
-        $("#search").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $("#table_data tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-            });
-        });
-    });
-</script>
 
 <!-- Custom Styles -->
 <style>
@@ -115,10 +119,6 @@
         margin-bottom: 1rem;
     }
 
-    body {
-        background: linear-gradient(#87f4b5, #93cbf1);
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-    }
+  
 </style>
 {% endblock %}

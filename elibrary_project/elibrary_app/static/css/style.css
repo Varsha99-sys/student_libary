@@ -1,0 +1,110 @@
+body {
+    /* background: linear-gradient(to right, #56ccf2, #2f80ed); */
+    /* background: linear-gradient(45deg, #b4e2cc, #9de4ec); */
+    background: linear-gradient(45deg, #024b53,#9dc0af);
+
+
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+}
+.navbar {
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+/* .nav-link {
+    color: white !important;
+} */
+.nav-link:hover {
+    color: #56ccf2 !important;
+}
+.footer {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px 0;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+    background: rgba(0, 0, 0, 0.7);
+}
+.dropdown-menu .dropdown-item:hover {
+    margin-top: 10%;
+    background: none !important;
+    color: white !important;
+}
+
+
+
+
+    .library-title {
+        margin-top: -6%;
+        text-align: center;
+        /* background: linear-gradient(90deg, #ff7eb3, #ff758c); */
+        color: rgb(12, 12, 12);
+        padding: 30px;
+        /* border-radius: 15px; */
+        /* box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); */
+        font-family: 'Poppins', sans-serif;
+        transition: transform 0.3s ease-in-out;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .library-title:hover {
+        transform: scale(1.05);
+    }
+
+    .word {
+        font-size: 2.3rem;
+        font-weight: bold;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: wordFade 1s ease-in-out forwards;
+    }
+
+    /* Delays for each word */
+    .word:nth-child(1) { animation-delay: 0.3s; }
+    .word:nth-child(2) { animation-delay: 0.6s; }
+    .word:nth-child(3) { animation-delay: 0.9s; }
+    .word:nth-child(4) { animation-delay: 1.2s; }
+
+    @keyframes wordFade {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .library-title {
+            flex-direction: column;
+            gap: 5px;
+        }
+        .word {
+            font-size: 2rem;
+        }
+    }
+
+
+    table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+    
+    .nav1 .nav-link {
+        color: black !important;
+    }
+
+    /* .text-container1 p {
+        font-size: 18px !important;
+        color: black;
+        line-height: 1.6 !important;
+    } */

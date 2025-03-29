@@ -2,50 +2,60 @@
 {% block title %} Library | Sign in {% endblock %}
 
 {% block content %}
-<br>
+
 <center>
-   <h1 class="display-5"><b>Login To Library</b></h1>
+   <h4 class="display-6 text-white"><b><i>Login To Library</i></b></h4>
+   <hr>
 </center>
 <!-- Container for the login form -->
-<div class="container border border-dark p-3 mt-5" style="max-width: 550px;">
-    <!-- Display error messages if any -->
-   {% for message in messages %}
-   <div class="alert alert-danger" role="alert">
-       {{ message }}
-   </div>
-   {% endfor %}
-   <form action="{% url 'signin' %}" method="POST">
-       {% csrf_token %}
-       
-       <!-- Username Field -->
-       <div class="form-group">
-           <label for="username"><b>Username</b></label>
-           <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
-       </div>
-       <br>
-       
-       <!-- Password Field -->
-       <div class="form-group">
-           <label for="password"><b>Password</b></label>
-           <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-       </div>
-       <br>
-       <!-- Submit Button -->
-       <center>
-           <button type="submit" class="btn btn-primary">Login</button>
-       </center>
-       <br>
-       <!-- forgot password -->
-       <div class="col">
-        <a href="{% url 'request_password_reset' %}">Forgot password?</a>
-        <a href="{% url 'social:begin' 'google-oauth2' %}" style="float: right;">Login with : <i class="bi bi-google"></i></a>
-      </div>
-       <!-- Links to Register and Admin login -->
-       <center>
-           <a href="{% url 'register' %}">Don't have an account? Register here</a>
-       </center>    
-   </form>
-   <br>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%; background: rgb(212, 209, 209); border-radius: 10px;">
+        <div class="card-body">
+            <!-- Display error messages if any -->
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+            <form action="{% url 'signin' %}" method="POST">
+                {% csrf_token %}
+                
+                <!-- Username Field -->
+                <div class="mb-3">
+                    <label for="username" class="form-label" style="color: black;"><b>Username</b></label>
+                    <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" required>
+                </div>
+                
+                <!-- Password Field -->
+                <div class="mb-3">
+                    <label for="password" class="form-label" style="color: black;"><b>Password</b></label>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg" style="background: linear-gradient(90deg, #56ccf2, #2f80ed); border: none;">Login</button>
+                    <br>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-danger btn-lg text-white"><i class="bi bi-google"></i> Login with Google</a>
+
+                </div>
+                
+                <br>
+                <!-- Forgot password & Google login -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'request_password_reset' %}" class="text-dark">Forgot password?</a>
+                    <a href="{% url 'register' %}" class="text-dark">Don't have an account? Register here</a>
+
+                </div>
+                
+                <br>
+                <!-- Register link -->
+                <!-- <center>
+                    <a href="{% url 'register' %}" class="text-dark">Don't have an account? Register here</a>
+                </center> -->
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

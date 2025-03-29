@@ -2,82 +2,74 @@
 {% block title %} Library | Register {% endblock %}
 
 {% block content %}
-<br>
 <center>
-   <h1 class="display-5"><b>Register To Library</b></h1>
+   <h1 class="display-6 text-white"><b><i>Register To Library</i></b></h1>
 </center>
-
+<hr>
 <!-- Container for the registration form -->
-<div class="container border border-dark p-3 mt-5" style="max-width: 550px;">
-   <!-- Display any error messages passed from the view -->
-   {% if errmsg %}
-   <div class="alert alert-warning alert-dismissible fade show" role="alert">
-     <strong>Error!</strong>{{errmsg}}
-     <button
-       type="button"
-       class="btn-close"
-       data-bs-dismiss="alert"
-       aria-label="Close"
-     ></button>
-   </div>
-   {% endif %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%; background: rgb(212, 209, 209); border-radius: 10px;">
+        <div class="card-body">
+            <!-- Display any error messages passed from the view -->
+            {% if errmsg %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Error!</strong> {{errmsg}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
 
-   <!-- Registration form -->
-   <form action="{% url 'register' %}" method="POST">
-       {% csrf_token %}       
-       <!-- First Name Field -->
-       <div class="form-group">
-           <label for="first_name"><b>First Name</b></label>
-           <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" required>
-       </div>
-       <br>
-       
-       <!-- Last Name Field -->
-       <div class="form-group">
-           <label for="last_name"><b>Last Name</b></label>
-           <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" required>
-       </div>
-       <br>
-       
-       <!-- Username Field -->
-       <div class="form-group">
-           <label for="username"><b>Username</b></label>
-           <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
-       </div>
-       <br>
-       
-       <!-- Email Field -->
-       <div class="form-group">
-           <label for="email"><b>Email</b></label>
-           <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
-       </div>
-       <br>
-       
-       <!-- Password Field -->
-       <div class="form-group">
-           <label for="password1"><b>Password</b></label>
-           <input type="password" name="password1" id="password1" class="form-control" placeholder="Password" required>
-       </div>
-       <br>
-       
-       <!-- Confirm Password Field -->
-       <div class="form-group">
-           <label for="password2"><b>Confirm Password</b></label>
-           <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
-       </div>
-       <br>
-       
-       <!-- Submit Button -->
-       <center>
-           <button type="submit" class="btn btn-primary">Register</button>
-       </center>
-       <br>
-
-       <!-- Link to Login Page -->
-       <center>
-           <a href="{% url 'signin' %}">Already a user? Login here</a>
-       </center>
-   </form>
+            <!-- Registration form -->
+            <form action="{% url 'register' %}" method="POST">
+                {% csrf_token %}       
+                <!-- First Name Field -->
+                <div class="mb-3">
+                    <label for="first_name" class="form-label" style="color: black;"><b>First Name</b></label>
+                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Enter your first name" required>
+                </div>
+                
+                <!-- Last Name Field -->
+                <div class="mb-3">
+                    <label for="last_name" class="form-label" style="color: black;"><b>Last Name</b></label>
+                    <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Enter your last name" required>
+                </div>
+                
+                <!-- Username Field -->
+                <div class="mb-3">
+                    <label for="username" class="form-label" style="color: black;"><b>Username</b></label>
+                    <input type="text" name="username" id="username" class="form-control" placeholder="Choose a username" required>
+                </div>
+                
+                <!-- Email Field -->
+                <div class="mb-3">
+                    <label for="email" class="form-label" style="color: black;"><b>Email</b></label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                
+                <!-- Password Field -->
+                <div class="mb-3">
+                    <label for="password1" class="form-label" style="color: black;"><b>Password</b></label>
+                    <input type="password" name="password1" id="password1" class="form-control" placeholder="Create a password" required>
+                </div>
+                
+                <!-- Confirm Password Field -->
+                <div class="mb-3">
+                    <label for="password2" class="form-label" style="color: black;"><b>Confirm Password</b></label>
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm your password" required>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg" style="background: linear-gradient(90deg, #56ccf2, #2f80ed); border: none;">Register</button>
+                </div>
+                
+                <br>
+                <!-- Link to Login Page -->
+                <center>
+                    <a href="{% url 'signin' %}" class="text-dark">Already a user? Login here</a>
+                </center>
+            </form>
+        </div>
+    </div>
 </div>
 <br>
 

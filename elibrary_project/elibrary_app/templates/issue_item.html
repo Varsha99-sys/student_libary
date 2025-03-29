@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% block title %} Library | Issue_item {% endblock %}
 
-{% load static %} 
+{% load static %}
 
 {% block content %}
 <!-- Include the jQuery library -->
@@ -10,9 +10,19 @@
 
 <!-- Book Search Section -->
 <center>
-    <br />
+    <!-- <br />
     <h1 class="display-3 fw-bold ">Available Books</h1>
-    <br />
+    <br /> -->
+    <!-- Title Section -->
+<div class="container mt-4">
+    <div class="col-md-12">
+        <div class="library-title">
+            <span class="word">Available</span>
+            <span class="word">Books</span>
+            
+        </div>
+    </div>
+</div>
     <div class="input-group container">
         <!-- <input
             id="search"
@@ -92,9 +102,9 @@
 </div>
 {% endfor %}
 
-    <table class="table">
+    <table class="table" style="border: none;">
         <thead class="thead-dark">
-            <tr>
+            <tr style="background-color: rgb(146, 146, 146);">
                 <th scope="col">Book Name</th>
                 <th scope="col">Author Name</th>
                 <th scope="col">Subject</th>
@@ -102,9 +112,10 @@
                 <th scope="col">Issue</th>
             </tr>
         </thead>
+        <tr style="height: 10px;"></tr>
         <tbody id="table_data">
             {% for book in books %}
-            <tr>
+            <tr style="background-color: rgb(212, 209, 209);">
                  <td>{{ book.book_name }}</td>
                 <td>{{ book.author_name }}</td>
                 <td>{{ book.subject }}</td>
@@ -182,10 +193,6 @@
         margin-bottom: 1rem;
     }
 
-    body {
-        background: linear-gradient(#87f4b5, #93cbf1);
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-    }
+   
 </style>
 {% endblock %}

@@ -1,25 +1,41 @@
 {% extends 'base.html' %}
 {% block title %} Library | History {% endblock %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
 {% block content %}
-<center>
+<!-- <center>
     <br />
     <h1 class="display-5 fw-bold">Your History</h1>
     <br />
-</center>
+</center> -->
+
+
+<!-- Title Section -->
+<div class="container mt-4">
+    <div class="col-md-12">
+        <div class="library-title">
+            <span class="word">Your</span>
+            <span class="word">History</span>
+            
+        </div>
+    </div>
+</div>
 
 <div class="container">
-    <table class="table">
+    <table class="table" style="border: none;">
         <thead class="thead-dark">
-            <tr>
+            <tr style="background-color: rgb(146, 146, 146);">
                 <th scope="col">Book Name</th>
                 <th scope="col">Author Name</th>
                 <th scope="col">Issue Date</th>
                 <th scope="col">Return Date</th>
             </tr>
         </thead>
-        <tbody>
+        <tr style="height: 10px;"></tr>
+        <tbody >
             {% for book in books %}
-            <tr>
+            <tr style="background-color: rgb(212, 209, 209);">
                 <td>{{ book.book_name }}</td>
                 <td>{{ book.book.author_name }}</td>
                 <td>{{ book.issue_date }}</td>
@@ -95,11 +111,6 @@
         margin-bottom: 1rem;
     }
 
-    body {
-        background: linear-gradient(#87f4b5, #93cbf1);
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
 </style>
 {% endblock %}
 {% endblock %}
