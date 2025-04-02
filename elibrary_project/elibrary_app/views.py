@@ -193,15 +193,35 @@ def logout_view(req):
     return redirect("home")
 
 #issue-item view starts here
+from datetime import datetime
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Book, IssuedItem
+
 @login_required(login_url=reverse_lazy("login"))
 def issue_item(request):
     if request.method == "POST":
+        # Get form data
         expected_return_date = request.POST.get("expected_return_date")  # Ensure this is not None
         return_date = request.POST.get("return_date")
         book_id = request.POST["book_id"]
+        
+        # Get the current book object
         current_book = Book.objects.get(id=book_id)
         
-        if current_book.quantity > 0:  # Only issue if the book is available
+        # Check the user's current borrowed books count
+        user_borrowed_books = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).count()
+        
+        # Maximum books allowed to borrow
+        max_books_allowed = 6
+        
+        # Check if user has already borrowed 6 books
+        if user_borrowed_books >= max_books_allowed:
+            messages.error(request, f"You can only borrow {max_books_allowed} books at a time.")
+        elif current_book.quantity > 0:  # Only issue if the book is available
+            # Create a new issued item record
             issue_item = IssuedItem.objects.create(
                 user_id=request.user.id,
                 book_id=current_book.id,
@@ -209,37 +229,43 @@ def issue_item(request):
                 return_date=return_date
             )
             issue_item.save()
+            
+            # Update the book quantity after issuing
             current_book.quantity -= 1
             current_book.save()
 
             messages.success(request, "Book issued successfully.")
+
+            # Send email notification about the issue
+            email = request.POST.get("email")
+            if expected_return_date: 
+                send_mail(
+                    subject="Book issued successfully..",
+                    message=f"Book issued successfully.. \n Kindly return your book before {expected_return_date} expected date.",
+                    from_email=email,  # Change to your email
+                    recipient_list=["sangalepearl99@gmail.com"],  # Your email
+                    fail_silently=False,
+                )
+                
+            # Check for overdue reminder (if the book's expected return date is today)
+            expected_return_date = datetime.strptime(expected_return_date, "%Y-%m-%d") 
+            if expected_return_date.date() == datetime.today().date(): 
+                send_mail(
+                    subject="Reminder Mail",
+                    message=f"Hello student,\nPlease return your book.\nYou exceeded the expected return date {expected_return_date.date()}, and you may be required to pay for it.\nThank you.",
+                    from_email="info@library.com",  # Change to your email
+                    recipient_list=["sangalepearl99@gmail.com"],  # Your email
+                    fail_silently=False,
+                )
         else:
             messages.error(request, "This book is no longer available.")
-        email = request.POST.get("email")
-        if expected_return_date: 
-            send_mail(
-                subject="Book issued successfully..",
-                message=f"Book issued successfully.. \n Kindly return your book before {expected_return_date} expected date.",
-                from_email={email},  # Change to your email
-                recipient_list=["sangalepearl99@gmail.com"],  # Your email
-                fail_silently=False,
-            )
-        from datetime import datetime
-        expected_return_date = datetime.strptime(expected_return_date, "%Y-%m-%d") 
-
-        if expected_return_date.date() == datetime.today().date(): 
-            send_mail(
-                subject="Reminder Mail",
-                message=f"Hello student ,\n Please return your book.\n You exceded the {expected_return_date} you have pay for it.\n Thank you",
-                from_email="info@library.com",  # Change to your email
-                recipient_list=["sangalepearl99@gmail.com"],  # Your email
-                fail_silently=False,
-            )
+    
     # Get books that are not yet issued to the user and have quantity > 0
     my_items = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).values_list("book_id", flat=True)
     books = Book.objects.filter(quantity__gt=0).exclude(id__in=my_items)  # Only show books with quantity > 0
 
     return render(request, "issue_item.html", {'books': books})
+
 
 # def issue_item(request):
 #     books=Book.objects.all()
@@ -467,3 +493,9 @@ from .models import StudyMaterial
 def study_material_list(request):
     materials = StudyMaterial.objects.all()
     return render(request, 'study_materials.html', {'materials': materials})
+
+
+
+def readers(request):
+    
+    return render(request, 'readers.html')

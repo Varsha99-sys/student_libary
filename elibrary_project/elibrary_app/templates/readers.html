@@ -1,0 +1,77 @@
+{% extends 'base.html' %} 
+{% block title %} Library | Study Materials {% endblock %}
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+
+{% block content %}
+<!-- Book Search Section -->
+<center>
+    <!-- <br />
+    <h1 class="display-5 fw-bold">Available PDF's of Books</h1>
+    <br /> -->
+    <div class="container mt-4">
+      <div class="col-md-12">
+          <div class="library-title">
+              <span class="word">Available</span>
+              <span class="word">PDF's</span>
+              <span class="word">of</span>
+              <span class="word">Books</span>
+              
+          </div>
+      </div>
+  </div>
+    <div class="input-group container">
+        <!-- <input
+            id="search"
+            type="search"
+            class="form-control rounded"
+            placeholder="Search Book"
+            aria-label="Search"
+            aria-describedby="search-addon"
+        /> -->
+        <form class="d-flex search-form w-100 mx-3" method="get" action="/searchproductstudy">
+            <input type="search" name="q" class="form-control search-input mx-2" placeholder="Search for Subject, Author" required>
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+          <!-- <form method="GET" action="{% url 'searchproductstudy' %}">
+            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search for books...">
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </form> -->
+    </div>
+</center>
+
+<br />
+
+      <!-- cards start here -->
+      <div class="container-fluid mt-3">
+        <div class="row">
+
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} rounded-0" role="alert">
+             {{ message }}
+          </div>
+          {% endfor %}
+          
+          {% for x in materials %}          
+          <div class="col-md-3 mt-3  ms-5">
+            <div class="card" style="width: 18rem; ">
+              <img src="{{x.images.url}}" class="card-img-top" alt="{{x.subject}}" style="width: 286px; height: 250px;">
+              <div class="card-body">
+                <h5 class="card-title" style="color: black;">{{x.title}}</h5>
+                <p class="card-text" style="color: black;">Subject : {{x.subject}}</p>
+                <p class="card-text" style="color: black;">Author : {{x.author_name}}</p>
+                <a href="{{ material.pdf.url }}"  class="btn btn-primary" download>Download PDF</a>
+                <!-- <a href="#" class="btn btn-danger">Buy Now</a> -->
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+
+      <!-- cards ends here -->
+ 
+{% endblock %}

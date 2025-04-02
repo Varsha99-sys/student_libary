@@ -34,6 +34,7 @@
                    <li class="nav-item"><a class="nav-link" href="{% url 'return_item' %}">Return</a></li>
                    <li class="nav-item"><a class="nav-link" href="{% url 'history' %}">History</a></li>
                    <li class="nav-item"><a class="nav-link" href="{% url 'study_material_list' %}">Study Material</a></li>
+                   <li class="nav-item"><a class="nav-link" href="{% url 'readers' %}">For Readers</a></li>
                    {% endif %}
                </ul>
                <ul class="navbar-nav ms-auto">
@@ -43,12 +44,26 @@
                    {% endif %}
                </ul>
                {% if user.is_authenticated %}
-               <div class="dropdown nav-item">
+               <!-- <div class="dropdown nav-item">
                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" style="color:var(--bs-navbar-brand-color)">Welcome, {{ request.user.username }}</a>
                    <ul class="dropdown-menu dropdown-menu-end">
                        <li ><a class="dropdown-item text-light" id="logoutButton" >Logout</a></li>
                    </ul>
-               </div>
+               </div> -->
+               <div class="dropdown nav-item" >
+                <button class="btn  nav-link"  type="button" >
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" style="color:var(--bs-navbar-brand-color)">Welcome, {{ request.user.username }}</a>
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu" style="background-color: transparent !important;">
+                    <center><li ><a id="logoutButton" type="button" class="text-dark"><b><i>Logout</i>
+                    </b></a></li>
+                        <li></li>
+                        <!-- <li><a href="#" type="button" class="text-dark">CSS</a></li> -->
+                    </center>
+                   
+                </ul>
+              </div>
+            </div>
                {% endif %}
            </div>
        </div>

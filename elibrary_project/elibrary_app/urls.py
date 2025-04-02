@@ -24,4 +24,6 @@ urlpatterns = [
     path('submit/', views.submit_return_date, name='submit_return_date'),
     path("contact_view/", views.contact_view, name="contact_view"),
     path('study-materials/', views.study_material_list, name='study_material_list'),
+    path('readers/', views.readers, name='readers'),
+
 ] 
