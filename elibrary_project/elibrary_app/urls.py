@@ -25,5 +25,10 @@ urlpatterns = [
     path("contact_view/", views.contact_view, name="contact_view"),
     path('study-materials/', views.study_material_list, name='study_material_list'),
     path('readers/', views.readers, name='readers'),
+    path('payment/',views.payment,name='payment'),
+    path('expected_book/',views.expected_book,name='expected_book'),
+      path('del/<str:item_id>', views.remove, name="del"),
+    # path('admin/', admin.site.urls),
+
 
 ] 

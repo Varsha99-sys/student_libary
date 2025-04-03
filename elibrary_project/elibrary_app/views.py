@@ -488,7 +488,7 @@ if __name__ == "__main__":
 
 
 from django.shortcuts import render
-from .models import StudyMaterial
+from .models import StudyMaterial,ForReaders
 
 def study_material_list(request):
     materials = StudyMaterial.objects.all()
@@ -497,5 +497,92 @@ def study_material_list(request):
 
 
 def readers(request):
+    materials1 = ForReaders.objects.all()
+    return render(request, 'readers.html',{'materials1': materials1})
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+# import todo form and models
+
+from .forms import TodoForm
+from .models import Todo
+
+###############################################
+
+
+def expected_book(request):
+
+    item_list = Todo.objects.order_by("-date")
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('expected_book')
+    form = TodoForm()
+
+    page = {
+        "forms": form,
+        "list": item_list,
+        "title": "TODO LIST",
+    }
+    return render(request, 'expected_book.html', page)
+
+
+### function to remove item, it receive todo item_id as primary key from url ##
+def remove(request, item_id):
+    item = Todo.objects.get(id=item_id)
+    item.delete()
+    messages.info(request, "item removed !!!")
+    return redirect('expected_book')
+
+
+
+import razorpay
+import random
+
+def payment(req):
+    if req.user.is_authenticated:
+        try:
+            payment_type=req.session.get("payment_type")
+            productid=req.session_get("productid")
+            print("payment_type,productid")
+
+            if payment_type=="single":
+                        
+                cartitems=Cart.objects.filter(userid=req.user.id,productid=productid)
+            else:
+                cartitems=Cart.objects.filter(userid=req.user.id)
+                totalamount=sum(i.productid.price*i.qty for i in cartitems)
+                print(totalamount)
+                userid=req.user
+
+                for items in cartitems:
+                    orderid=random.randrange(1000,9000000)
+                    orderdata=Orders.objects.create(orderid=orderid,productid=items.productid,userid=userid,qty=items.qty)
+                    orderdata.save()
+
+                    receiptid=random.randrange(10000000,80000000)
+                    paymentdata=Payment.objects.create(receiptid=receiptid,orderid=orderdata,userid=userid,totalprice=totalamount)
+                    paymentdata.save()
+                print(orderid,receiptid)
+                
+                client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+                data = { "amount": totalamount*100, "currency": "INR", "receipt": str(receiptid) }
+                payment = client.order.create(data=data) # Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                
+                cartitems.delete()
+            # subject=f"FlipkartClone Payment Status for your order={orderid}"
+            # msg=f"Hi {userid}, Thank  yor for using our services \n Total amount paid by you is {totalamount}"
+            # emailfrom=settings.EMAIL_HOST_USER
+            # receiver=[userid]
+            # send_mail(subject,msg,emailfrom,receiver)
+            context={"data":payment,"amount":totalamount}
+
+        except:
+            context={}    
+            context["error"]="An error occured while creating payment. Please try again!"
     
-    return render(request, 'readers.html')
+    return render(req,'payment.html',context)

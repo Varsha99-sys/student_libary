@@ -1,5 +1,5 @@
 {% extends 'base.html' %} 
-{% block title %} Library | Study Materials {% endblock %}
+{% block title %} Library | ForReaders {% endblock %}
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -15,9 +15,9 @@
       <div class="col-md-12">
           <div class="library-title">
               <span class="word">Available</span>
-              <span class="word">PDF's</span>
-              <span class="word">of</span>
               <span class="word">Books</span>
+              <span class="word">for</span>
+              <span class="word">Readers</span>
               
           </div>
       </div>
@@ -54,7 +54,7 @@
           </div>
           {% endfor %}
           
-          {% for x in materials %}          
+          {% for x in materials1 %}          
           <div class="col-md-3 mt-3  ms-5">
             <div class="card" style="width: 18rem; ">
               <img src="{{x.images.url}}" class="card-img-top" alt="{{x.subject}}" style="width: 286px; height: 250px;">
@@ -62,8 +62,9 @@
                 <h5 class="card-title" style="color: black;">{{x.title}}</h5>
                 <p class="card-text" style="color: black;">Subject : {{x.subject}}</p>
                 <p class="card-text" style="color: black;">Author : {{x.author_name}}</p>
-                <a href="{{ material.pdf.url }}"  class="btn btn-primary" download>Download PDF</a>
-                <!-- <a href="#" class="btn btn-danger">Buy Now</a> -->
+                <p class="card-text" style="color: black;">Amount : {{x.amount}}</p>
+                <!-- <a href="{% url 'register' %}"  class="btn btn-primary" download>Payment</a> -->
+                <a href="{% url 'payment' %}" class="btn btn-danger">Buy Now</a>
               </div>
             </div>
           </div>

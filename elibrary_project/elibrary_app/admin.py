@@ -33,11 +33,17 @@ admin.site.register(Book, BookAdmin)
 admin.site.register(IssuedItem, IssuedItemAdmin)
 
 from django.contrib import admin
-from .models import StudyMaterial
+from .models import StudyMaterial,ForReaders
 
 # pdf admin
 @admin.register(StudyMaterial)
 class StudyMaterialAdmin(admin.ModelAdmin):
     list_display = ('title','subject', 'author_name','images')
+    
+@admin.register(ForReaders)
+class ForReadersAdmin(admin.ModelAdmin):
+    list_display = ('title','subject', 'author_name','images','amount')
 
+from .models import Todo
 
+admin.site.register(Todo)

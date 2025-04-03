@@ -82,3 +82,25 @@ class StudyMaterial(models.Model):
     def __str__(self):
         return self.title
 
+class ForReaders(models.Model):
+    title = models.CharField(max_length=255)
+    subject=models.CharField(max_length=200)
+    author_name=models.CharField(max_length=200)
+    amount=models.PositiveIntegerField()
+    images = models.ImageField(upload_to="photos")
+    def __str__(self):
+        return self.title
+
+
+from django.utils import timezone
+
+
+class Todo(models.Model):
+    title = models.CharField(max_length=100)
+    details = models.TextField()
+    date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
+       
+
