@@ -1,65 +1,68 @@
-{% extends 'base.html' %}
-{% block title %}Library | Payment{% endblock %}
-{% block body %}
-<div class="container">
-    <div class="row">
-        <h3>Total Amount: ₹{{ amount }}</h3>
-
-        {% if error %}
-            <mark><h1>{{ error }}</h1></mark>
-        {% endif %}
-
-        <!-- Display Book Information -->
-        <h4>Book Title: {{ book.title }}</h4>
-        <p>Author: {{ book.author_name }}</p>
-        <p>Subject: {{ book.subject }}</p>
-        <img src="{{ book.images.url }}" alt="{{ book.title }}" style="width: 200px;"/>
-
-        <!-- Button to initiate Razorpay payment -->
-        <button id="rzp-button1">Pay with Razorpay</button>
-
-        <!-- Razorpay Checkout Script -->
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-        <script>
-            var options = {
-                "key": "rzp_test_wH0ggQnd7iT3nB",  // Replace with your Razorpay Key ID
-                "amount": "{{ data.amount }}",  // Amount in paise (100 paise = 1 INR)
-                "currency": "INR",
-                "name": "{{ book.title }}",  // Book title
-                "description": "Payment for the book: {{ book.title }}",
-                "image": "{{ book.images.url }}",  // Book image for Razorpay modal
-                "order_id": "{{ data.id }}",  // Razorpay order ID passed from Django view
-                "handler": function (response) {
-                    alert("Payment done successfully!");
-                    // Optionally, you can redirect or process the payment response here
-                    // Example: window.location.href = '/showorders';
-                },
-                "prefill": {
-                    "name": "{{ request.user.username }}",  // User's name
-                    "email": "{{ request.user.email }}",  // User's email
-                    "contact": "{{ request.user.profile.phone_number }}"  // User's phone number (if available)
-                },
-                "notes": {
-                    "address": "Razorpay Corporate Office"
-                },
-                "theme": {
-                    "color": "#3399cc"  // Customize the theme color (optional)
-                }
-            };
-
-            var rzp1 = new Razorpay(options);
-
-            rzp1.on('payment.failed', function (response) {
-                alert("Transaction cancelled. Try again");
-            });
-
-            document.getElementById('rzp-button1').onclick = function(e) {
-                rzp1.open();
-                e.preventDefault();
-            };
-        </script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h3>Total Amount:{{amount}}</h3>
+            {% if error %}
+            <mark> <h1> {{error}}</h1>
+            </mark>
+            {% endif %}
+            <button id="rzp-button1">Pay with Razorpay</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    var options = {
+        "key": "rzp_test_wH0ggQnd7iT3nB", // Enter the Key ID generated from the Dashboard
+        "amount": "{{data.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Acme Corp",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{data.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+            // alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            // alert(response.razorpay_signature)
+            alert("Payment done successfully.")
+            window.location.href=window.location.origin+'/showorders'
+        },
+        "prefill": {
+            "name": "Gaurav Kumar",
+            "email": "gaurav.kumar@example.com",
+            "contact": "9000090000"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            // alert(response.error.code);
+            // alert(response.error.description);
+            // alert(response.error.source);
+            // alert(response.error.step);
+            // alert(response.error.reason);
+            // alert(response.error.metadata.order_id);
+            // alert(response.error.metadata.payment_id);
+            alert("Transaction cancelled. Try again")
+            window.location.href=window.location.origin+'/showcarts'
+         
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+    
+    
+        </div>
     </div>
-</div>
-
-{% endblock %}
+</body>
+</html>
