@@ -287,29 +287,50 @@ def issue_item(request):
 
 #     return render(request, "issue_item.html",{'books':books})
 
+from django.utils import timezone
 
 # Return view to return book to library
 @login_required(login_url=reverse_lazy("login"))
 def return_item(request):
     if request.method == "POST":
-        book_id = request.POST["book_id"]
-        # current_book = Book.objects.all()
-        # print(current_book)
-        current_book = Book.objects.get(id=book_id)  # This returns a single Book instance
-        current_book.quantity += 1
-        current_book.save()
+        expected_return_date=request.POST.get('expected_return_date')
+        
+        # today = timezone.now().date()
 
-        # Update the return date of the issued book
-        issue_item = IssuedItem.objects.filter(user_id=request.user, book_id=current_book, return_date__isnull=True)
-        issue_item.update(return_date=date.today())
+        expected_return_date = datetime(expected_return_date) 
+        if expected_return_date.date() == datetime.today().date():            
+            messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
+            return redirect('payment')  # Give url name of your payment page here
+    
+        else:
+            book_id = request.POST["book_id"]
+            current_book = Book.objects.get(id=book_id)  # This returns a single Book instance
+            current_book.quantity += 1
+            current_book.save()
 
-        messages.success(request, "Book returned successfully.")
+            # Update the return date of the issued book
+            issue_item = IssuedItem.objects.filter(user_id=request.user, book_id=current_book, return_date__isnull=True)
+            issue_item.update(return_date=date.today())
+
+            messages.success(request, "Book returned successfully.")
 
     # Get books that are issued to the user
     my_items = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).values_list("book_id")
     books = Book.objects.filter(id__in=my_items)
 
     return render(request, "return_item.html", {"books": books})
+    # else:
+        
+    # def return_item(request):
+    #     book = IssuedItem.objects.get(expected_return_date)
+        
+    #     today = timezone.now().date()
+
+    #     if book.expected_return_date < today:
+    #         messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
+    #         return redirect('payment_page')  # Give url name of your payment page here
+    
+    #         return redirect('issued_book')
 
 # @login_required(login_url=reverse_lazy("login"))
 # def history(request):
@@ -352,14 +373,14 @@ from django.contrib import messages
 from .models import StudyMaterial
 
 def searchproductstudy(req):
-    query = req.GET.get("q")  # Get the query parameter from GET request
-    books = StudyMaterial.objects.all()  # Default: show all books if no query
+    query = req.GET.get("q") 
+    books = StudyMaterial.objects.all() 
     print(books)
     if query:
         materials = StudyMaterial.objects.filter(
             Q(subject__icontains=query) | Q(author_name__icontains=query))
         print(materials,query)
-        if not materials.exists():  # If no books match the search, show a message
+        if not materials.exists():  
             messages.error(req, "No results found!") 
     else:
         messages.error(req, "No results found!") 
@@ -368,6 +389,25 @@ def searchproductstudy(req):
 
     return render(req, 'study_materials.html', context)
 
+#Search books for readers
+def searchproductreaders(req):
+    query = req.GET.get("q") 
+    books = ForReaders.objects.all() 
+    print(books)
+    if query:
+        materials1 = ForReaders.objects.filter(
+            Q(subject__icontains=query) | Q(author_name__icontains=query))
+        print(materials1,query)
+        if not materials1.exists():  
+            messages.error(req, "No results found!") 
+    else:
+        messages.error(req, "No results found!") 
+            
+    context = {'materials1': materials1}
+
+    return render(req, 'readers.html', context)
+
+#Search for return book
 def searchproductreturn(req):
     query=req.GET["q"]
     if query:
@@ -425,7 +465,6 @@ def submit_return_date(request):
 
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from django.http import HttpResponse
 
 import re
 def contact_view(request):
@@ -510,9 +549,6 @@ from django.contrib import messages
 from .forms import TodoForm
 from .models import Todo
 
-###############################################
-
-
 def expected_book(request):
 
     item_list = Todo.objects.order_by("-date")
@@ -531,7 +567,6 @@ def expected_book(request):
     return render(request, 'expected_book.html', page)
 
 
-### function to remove item, it receive todo item_id as primary key from url ##
 def remove(request, item_id):
     item = Todo.objects.get(id=item_id)
     item.delete()
@@ -540,49 +575,53 @@ def remove(request, item_id):
 
 
 
-import razorpay
+
 import random
+from django.shortcuts import render
+import razorpay
+
+
+import random
+from django.shortcuts import render
+import razorpay
+
+
 
 def payment(req):
     if req.user.is_authenticated:
         try:
-            payment_type=req.session.get("payment_type")
-            productid=req.session_get("productid")
-            print("payment_type,productid")
+            # Get Product/Book
+            product = get_object_or_404(ForReaders)
+            amount = product.amount  # Amount from ForReaders model
+            userid = req.user
 
-            if payment_type=="single":
-                        
-                cartitems=Cart.objects.filter(userid=req.user.id,productid=productid)
-            else:
-                cartitems=Cart.objects.filter(userid=req.user.id)
-                totalamount=sum(i.productid.price*i.qty for i in cartitems)
-                print(totalamount)
-                userid=req.user
+            # Razorpay Client
+            client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
 
-                for items in cartitems:
-                    orderid=random.randrange(1000,9000000)
-                    orderdata=Orders.objects.create(orderid=orderid,productid=items.productid,userid=userid,qty=items.qty)
-                    orderdata.save()
+            # Create Razorpay Order
+            data = {
+                "amount": int(amount) * 100,  # Convert to paisa
+                "currency": "INR",
+                "receipt": f"{userid.id}-{random.randint(1000, 9999)}"
+            }
+            payment_order = client.order.create(data=data)
 
-                    receiptid=random.randrange(10000000,80000000)
-                    paymentdata=Payment.objects.create(receiptid=receiptid,orderid=orderdata,userid=userid,totalprice=totalamount)
-                    paymentdata.save()
-                print(orderid,receiptid)
-                
-                client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
-                data = { "amount": totalamount*100, "currency": "INR", "receipt": str(receiptid) }
-                payment = client.order.create(data=data) # Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-                
-                cartitems.delete()
-            # subject=f"FlipkartClone Payment Status for your order={orderid}"
-            # msg=f"Hi {userid}, Thank  yor for using our services \n Total amount paid by you is {totalamount}"
-            # emailfrom=settings.EMAIL_HOST_USER
-            # receiver=[userid]
-            # send_mail(subject,msg,emailfrom,receiver)
-            context={"data":payment,"amount":totalamount}
+            # Store in Payment Table
+            Payment.objects.create(
+                userid=userid,
+                amount=amount
+            )
 
-        except:
-            context={}    
-            context["error"]="An error occured while creating payment. Please try again!"
-    
-    return render(req,'payment.html',context)
+            context = {
+                "payment": payment_order,
+                "amount": amount,  # Pass to template for display
+                "product": product,  # Product Details for display
+                "key": "rzp_test_wH0ggQnd7iT3nB"
+            }
+
+        except Exception as e:
+            print("Error:", e)
+            context = {"error": "Something went wrong during payment"}
+
+        return render(req, 'payment.html', context)
+

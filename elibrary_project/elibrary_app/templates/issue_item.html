@@ -53,7 +53,7 @@
             <form action="{% url 'issue_item' %}" method="POST">
                 {% csrf_token %}
                     <label for="expected_return_date"><b>Expected Return Date</b></label><br>
-                    <input type="date" name="expected_return_date" class="form-control" placeholder="expected_return_date" required>
+                    <input type="date" name="expected_return_date" id="expected_return_date" class="form-control" placeholder="expected_return_date" required>
                 <br>
                 {% for book in books %}
 
@@ -144,6 +144,10 @@
     </table>
 </div>
 
+<script>
+    let today = new Date().toISOString().split('T')[0];
+    document.getElementById("expected_return_date").setAttribute('min', today);
+</script>
 <!-- Search Functionality Script -->
 <script>
     $(document).ready(function () {
