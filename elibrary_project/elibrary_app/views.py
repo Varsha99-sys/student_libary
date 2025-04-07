@@ -290,19 +290,20 @@ def issue_item(request):
 from django.utils import timezone
 
 # Return view to return book to library
+
 @login_required(login_url=reverse_lazy("login"))
 def return_item(request):
-    if request.method == "POST":
-        expected_return_date=request.POST.get('expected_return_date')
-        
-        # today = timezone.now().date()
+    # if request.method == "POST":
+    #     expected_return_date=request.POST.get('expected_return_date')
+    #     # today = timezone.now().date()
 
-        expected_return_date = datetime(expected_return_date) 
-        if expected_return_date.date() == datetime.today().date():            
-            messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
-            return redirect('payment')  # Give url name of your payment page here
+    #     expected_return_date = IssuedItem.objects.filter(expected_return_date=expected_return_date)
+    #     print(expected_return_date)
+    #     if expected_return_date == datetime.today().date():            
+    #         messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
+    #     return render(request,'payment.html')  # Give url name of your payment page here
     
-        else:
+    if request.method == "POST":
             book_id = request.POST["book_id"]
             current_book = Book.objects.get(id=book_id)  # This returns a single Book instance
             current_book.quantity += 1
