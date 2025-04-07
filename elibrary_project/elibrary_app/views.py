@@ -574,54 +574,39 @@ def remove(request, item_id):
     return redirect('expected_book')
 
 
+# import random
+# from django.shortcuts import render
+# import razorpay
 
 
-import random
-from django.shortcuts import render
+
+# def payment(req):
+#     import razorpay
+#     client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+#     # client = razorpay.Client(auth=("YOUR_ID", "YOUR_SECRET"))
+
+#     data = { "amount": 100, "currency": "INR", "receipt": "order_rcptid_11" }
+#     payment = client.order.create(data=data) # Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+#     return render(req, 'payment.html')
+
+from django.shortcuts import render, get_object_or_404
 import razorpay
+from .models import ForReaders 
 
+def payment(req, reader_id):  
+    reader = get_object_or_404(ForReaders, id=reader_id)
+    
+    amount_rupees = reader.amount  
+    amount_paise = int(amount_rupees * 100)  
 
-import random
-from django.shortcuts import render
-import razorpay
+    client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
 
+    data = {
+        "amount": amount_paise,
+        "currency": "INR",
+        "receipt": f"order_rcptid_{reader.id}"
+    }
 
+    payment = client.order.create(data=data)
 
-def payment(req):
-    if req.user.is_authenticated:
-        try:
-            # Get Product/Book
-            product = get_object_or_404(ForReaders)
-            amount = product.amount  # Amount from ForReaders model
-            userid = req.user
-
-            # Razorpay Client
-            client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
-
-            # Create Razorpay Order
-            data = {
-                "amount": int(amount) * 100,  # Convert to paisa
-                "currency": "INR",
-                "receipt": f"{userid.id}-{random.randint(1000, 9999)}"
-            }
-            payment_order = client.order.create(data=data)
-
-            # Store in Payment Table
-            Payment.objects.create(
-                userid=userid,
-                amount=amount
-            )
-
-            context = {
-                "payment": payment_order,
-                "amount": amount,  # Pass to template for display
-                "product": product,  # Product Details for display
-                "key": "rzp_test_wH0ggQnd7iT3nB"
-            }
-
-        except Exception as e:
-            print("Error:", e)
-            context = {"error": "Something went wrong during payment"}
-
-        return render(req, 'payment.html', context)
-
+    return render(req, 'payment.html', {"payment": payment, "amount": amount_rupees})

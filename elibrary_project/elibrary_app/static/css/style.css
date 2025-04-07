@@ -29,21 +29,12 @@ body {
     display: block;
     background: rgba(0, 0, 0, 0.7);
 }
-.dropdown-menu li a{
-    padding: 12px 160px !important ;
 
-}
 .dropdown-menu .dropdown-item:hover {
     margin-top: 10%;
     background: none !important;
     color: white !important;
 }
-.dropdown-content li a{
-    padding: 12px 160px !important ;
-
-}
-
-
 
     .library-title {
         margin-top: -6%;
