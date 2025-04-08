@@ -293,15 +293,15 @@ from django.utils import timezone
 
 @login_required(login_url=reverse_lazy("login"))
 def return_item(request):
-    # if request.method == "POST":
-    #     expected_return_date=request.POST.get('expected_return_date')
-    #     # today = timezone.now().date()
+    if request.method == "POST":
+        expected_return_date=request.POST.get('expected_return_date')
+        # today = timezone.now().date()
 
-    #     expected_return_date = IssuedItem.objects.filter(expected_return_date=expected_return_date)
-    #     print(expected_return_date)
-    #     if expected_return_date == datetime.today().date():            
-    #         messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
-    #     return render(request,'payment.html')  # Give url name of your payment page here
+        expected_return_date = IssuedItem.objects.filter(expected_return_date=expected_return_date)
+        print(expected_return_date)
+        if expected_return_date == datetime.today().date():            
+            messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
+        return render(request,'payment.html')  # Give url name of your payment page here
     
     if request.method == "POST":
             book_id = request.POST["book_id"]
@@ -575,26 +575,32 @@ def remove(request, item_id):
     return redirect('expected_book')
 
 
-# import random
-# from django.shortcuts import render
-# import razorpay
+import random
+from django.shortcuts import render
+import razorpay
 
+def payment(req):
+   
+    if request.method == "POST":
+     
+        book_id = request.POST.get("book_id")  # Get book_id from form
+        book = Book.objects.get(id=book_id)  # Fetch the book from DB
+        book.quantity -= 1
+        book.save()
+     
+        client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+    # client = razorpay.Client(auth=("YOUR_ID", "YOUR_SECRET"))
 
-
-# def payment(req):
-#     import razorpay
-#     client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
-#     # client = razorpay.Client(auth=("YOUR_ID", "YOUR_SECRET"))
-
-#     data = { "amount": 100, "currency": "INR", "receipt": "order_rcptid_11" }
-#     payment = client.order.create(data=data) # Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-#     return render(req, 'payment.html')
+        data = { "amount": 100, "currency": "INR", "receipt": "order_rcptid_11" }
+        payment = client.order.create(data=data) 
+    # Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    return render(req, 'issue_item.html')
 
 from django.shortcuts import render, get_object_or_404
 import razorpay
 from .models import ForReaders 
 
-def payment(req, reader_id):  
+def payment1(req, reader_id):  
     reader = get_object_or_404(ForReaders, id=reader_id)
     
     amount_rupees = reader.amount  
@@ -610,4 +616,4 @@ def payment(req, reader_id):
 
     payment = client.order.create(data=data)
 
-    return render(req, 'payment.html', {"payment": payment, "amount": amount_rupees})
+    return render(req, 'readers.html', {"payment": payment, "amount": amount_rupees})
