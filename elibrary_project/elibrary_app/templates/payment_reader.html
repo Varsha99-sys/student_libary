@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Library | History {% endblock %}
+{% block title %} Library | Payment {% endblock %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
@@ -25,7 +25,7 @@
 
 <div class="container">
     <div class="row">
-        <h2 style="color: tomato;">You have to pay before returning the book Becoze You have exceeded the date limit of Expected return date. </h2>
+        <h2 style="color: tomato;">You have to pay for the book you choose.</h2>
         <h3>Total Amount:{{amount}} 100 </h3>
         <br><br><br>
         {% if error %}

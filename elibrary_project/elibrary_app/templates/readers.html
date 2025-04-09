@@ -53,7 +53,7 @@
              {{ message }}
           </div>
           {% endfor %}
-          
+
           {% for x in materials1 %}          
           <div class="col-md-3 mt-3  ms-5">
             <div class="card" style="width: 18rem; ">
@@ -63,8 +63,10 @@
                 <p class="card-text" style="color: black;">Subject : {{x.subject}}</p>
                 <p class="card-text" style="color: black;">Author : {{x.author_name}}</p>
                 <p class="card-text" style="color: black;">Amount : {{x.amount}}</p>
+                <p>Title: {{ x.title }} | Subject: {{ x.subject }} {{x.id}}</p>
+
                 <!-- <a href="{% url 'register' %}"  class="btn btn-primary" download>Payment</a> -->
-                <a href="{% url 'payment1' %}" class="btn btn-danger">Buy Now</a>
+                <a href="{% url 'payment_reader' x.id %}">Buy Now</a>
               </div>
             </div>
           </div>
