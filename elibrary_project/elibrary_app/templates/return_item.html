@@ -66,6 +66,7 @@
          <tr style="background-color: rgb(212, 209, 209);">
             <td>{{ book.book_name }}</td>
             <td>{{ book.author_name }}</td>
+            <td>{{book.id}}</td>
             <td class="text-center">
                <form action="{% url 'return_item' %}" aria-controls="rounded" method="POST">
                   {% csrf_token %}
