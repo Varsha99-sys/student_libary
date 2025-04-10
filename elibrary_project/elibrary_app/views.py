@@ -293,17 +293,25 @@ from django.utils import timezone
 
 @login_required(login_url=reverse_lazy("login"))
 def return_item(request):
+    # if request.method == "POST":
+    #     expected_return_date=request.POST.get('expected_return_date')
+    #     # today = timezone.now().date()
+
+    #     expected_return_date = IssuedItem.objects.filter(expected_return_date=expected_return_date)
+    #     print(expected_return_date)
+    #     if expected_return_date == datetime.today().date():            
+    #         messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
+    #     return render(request,'payment.html')  # Give url name of your payment page here
+    
     if request.method == "POST":
         expected_return_date=request.POST.get('expected_return_date')
-        # today = timezone.now().date()
 
         expected_return_date = IssuedItem.objects.filter(expected_return_date=expected_return_date)
         print(expected_return_date)
-        if expected_return_date == datetime.today().date():            
+        if datetime.today().date() == datetime.today().date():            
             messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
-        return render(request,'payment.html')  # Give url name of your payment page here
-    
-    if request.method == "POST":
+            return render(request,'payment.html')  # Give url name of your payment page here
+        else:
             book_id = request.POST["book_id"]
             current_book = Book.objects.get(id=book_id)  # This returns a single Book instance
             current_book.quantity += 1
@@ -585,19 +593,38 @@ def payment(req):
             current_book = Book.objects.get(id=book_id)  # This returns a single Book instance
             current_book.quantity += 1
             current_book.save()
-            
-            
+
             # Update the return date of the issued book
             issue_item = IssuedItem.objects.filter(user_id=request.user, book_id=current_book, return_date__isnull=True)
             issue_item.update(return_date=date.today())
 
             messages.success(request, "Book returned successfully.")
 
+          
+
     # Get books that are issued to the user
     my_items = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).values_list("book_id")
     books = Book.objects.filter(id__in=my_items)
-
+    client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+    data = { "amount": 100, "currency": "INR", "receipt": "order_rcptid_11" }
+    payment = client.order.create(data=data) 
+    
     return render(request, "return_item.html", {"books": books})
+    # if request.method == "POST":
+    #     client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+    #     # client = razorpay.Client(auth=("YOUR_ID", "YOUR_SECRET"))
+
+    #     data = { "amount": 100, "currency": "INR", "receipt": "order_rcptid_11" }
+    #     payment = client.order.create(data=data) 
+
+
+    #     book_id = request.POST["book_id"]
+    #     current_book = Book.objects.get(id=book_id)  # This returns a single Book instance
+    #     current_book.quantity += 1
+    #     current_book.save()
+
+    # current_book.delete()
+    # return render(request, "payment.html")
 
 
 
@@ -634,7 +661,7 @@ import razorpay
 from django.shortcuts import render, redirect, get_object_or_404
 
 def payment_reader(request, reader_id):
-    reader = get_object_or_404(ForReaders, id=reader_id)
+    reader = ForReaders.objects.filter(id=reader_id)
 
     if request.method == "POST":
         client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
@@ -642,8 +669,8 @@ def payment_reader(request, reader_id):
         payment = client.order.create(data=data)
 
         # After Payment Success → Delete Reader or Book
-        reader.delete()  # This will remove the reader entry (or book entry if book model)
-
         return redirect('readers')  # Redirect to readers page after payment
+    reader.delete()  # This will remove the reader entry (or book entry if book model)
+    
 
     return render(request, 'payment_reader.html', {'reader': reader})
