@@ -28,7 +28,7 @@ urlpatterns = [
     path('readers/', views.readers, name='readers'),
     path('searchproductreaders/', views.searchproductreaders, name='searchproductreaders'),
     path('payment_reader/<int:reader_id>/', views.payment_reader, name='payment_reader'),
-    path('payment/<int:reader_id>/',views.payment,name='payment'),
+    path('payment',views.payment,name='payment'),
     path('expected_book/',views.expected_book,name='expected_book'),
     path('del/<str:item_id>', views.remove, name="del"),
     # path('admin/', admin.site.urls),

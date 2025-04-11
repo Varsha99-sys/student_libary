@@ -308,8 +308,8 @@ def return_item(request):
 
         expected_return_date = IssuedItem.objects.filter(expected_return_date=expected_return_date)
         print(expected_return_date)
-        if datetime.today().date() == datetime.today().date():            
-            messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
+        if expected_return_date == datetime.today().date():            
+            # messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
             return render(request,'payment.html')  # Give url name of your payment page here
         else:
             book_id = request.POST["book_id"]
@@ -583,33 +583,43 @@ def remove(request, item_id):
     return redirect('expected_book')
 
 
-import random
-from django.shortcuts import render
 import razorpay
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from datetime import date
+from .models import Book, IssuedItem  # make sure your model imports are correct
 
-def payment(req):
+def payment(request):
     if request.method == "POST":
-            book_id = request.POST["book_id"]
-            current_book = Book.objects.get(id=book_id)  # This returns a single Book instance
+        book_id = request.POST["book_id"]
+        current_book = Book.objects.get(id=book_id)
+
+        # Simulate payment success (In real life, this should be confirmed via webhook or callback)
+        client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+        data = {"amount": 10000, "currency": "INR", "receipt": "order_rcptid_11"}  # amount in paise
+        payment = client.order.create(data=data)
+
+        # You'd normally confirm payment success here using Razorpay's webhook or status check
+        payment_success = True  # Simulating success
+
+        if payment_success:
             current_book.quantity += 1
             current_book.save()
 
-            # Update the return date of the issued book
+            # Set return date for the issued item
             issue_item = IssuedItem.objects.filter(user_id=request.user, book_id=current_book, return_date__isnull=True)
             issue_item.update(return_date=date.today())
 
             messages.success(request, "Book returned successfully.")
 
-          
+            return redirect("return_item")  # redirect to refresh list
 
-    # Get books that are issued to the user
-    my_items = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).values_list("book_id")
+    # Get books currently issued and not returned
+    my_items = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).values_list("book_id", flat=True)
     books = Book.objects.filter(id__in=my_items)
-    client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
-    data = { "amount": 100, "currency": "INR", "receipt": "order_rcptid_11" }
-    payment = client.order.create(data=data) 
-    
+
     return render(request, "return_item.html", {"books": books})
+
     # if request.method == "POST":
     #     client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
     #     # client = razorpay.Client(auth=("YOUR_ID", "YOUR_SECRET"))
@@ -654,11 +664,10 @@ def payment(req):
     # # Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
     # return render(req, 'payment.html')
 
-from django.shortcuts import render, get_object_or_404
 import razorpay
 from .models import ForReaders 
 import razorpay
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 
 def payment_reader(request, reader_id):
     reader = ForReaders.objects.filter(id=reader_id)
@@ -669,7 +678,7 @@ def payment_reader(request, reader_id):
         payment = client.order.create(data=data)
 
         # After Payment Success → Delete Reader or Book
-        return redirect('readers')  # Redirect to readers page after payment
+        return redirect('issue_item')  # Redirect to readers page after payment
     reader.delete()  # This will remove the reader entry (or book entry if book model)
     
 
