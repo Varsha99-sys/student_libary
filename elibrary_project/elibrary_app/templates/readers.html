@@ -66,7 +66,8 @@
                 <p>Title: {{ x.title }} | Subject: {{ x.subject }} {{x.id}}</p>
 
                 <!-- <a href="{% url 'register' %}"  class="btn btn-primary" download>Payment</a> -->
-                <a href="{% url 'payment_reader' x.id %}">Buy Now</a>
+                    <a href="{% url 'payment_reader' x.id %}" style="text-decoration: none;" class="btn btn-success">Buy Now</a>
+
               </div>
             </div>
           </div>
