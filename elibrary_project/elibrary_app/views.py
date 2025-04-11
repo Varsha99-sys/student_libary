@@ -308,7 +308,7 @@ def return_item(request):
 
         expected_return_date = IssuedItem.objects.filter(expected_return_date=expected_return_date)
         print(expected_return_date)
-        if expected_return_date == datetime.today().date():            
+        if datetime.today().date() == datetime.today().date():            
             # messages.warning(request, "Your return date has been passed! Please pay fine before returning the book.")
             return render(request,'payment.html')  # Give url name of your payment page here
         else:
@@ -609,6 +609,7 @@ def payment(request):
             # Set return date for the issued item
             issue_item = IssuedItem.objects.filter(user_id=request.user, book_id=current_book, return_date__isnull=True)
             issue_item.update(return_date=date.today())
+            issue_item.save()
 
             messages.success(request, "Book returned successfully.")
 
@@ -617,7 +618,6 @@ def payment(request):
     # Get books currently issued and not returned
     my_items = IssuedItem.objects.filter(user_id=request.user, return_date__isnull=True).values_list("book_id", flat=True)
     books = Book.objects.filter(id__in=my_items)
-
     return render(request, "return_item.html", {"books": books})
 
     # if request.method == "POST":
